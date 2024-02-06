@@ -6,6 +6,7 @@ import CreateProduct from "./Pages/createProdcut/CreateProduct";
 import Profile from "./Pages/Profile/Profile";
 import Recive from "./Pages/Recive/Recive";
 import DailyMonthSall from "./Pages/Daily Sall & Month/DailyMonthSall";
+import ProductID from "./Pages/ProductList/ProductID/ProductID";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/receive" element={<Recive/>} />
         <Route path="/profile" element={<Profile/>} />
         <Route path="/dailySales" element={<DailyMonthSall/>} />
+        <Route path="/product/:id" element={<ProductID/>} />
 
 
         </Route>
