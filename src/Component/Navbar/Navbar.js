@@ -37,7 +37,7 @@ const Navbar = () => {
       {/* Hamburger Toggle BTN */}
 
       <div
-        className={`bg-orange-700  h-screen p-5 pt-10  ${
+        className={` bg-dark-purple h-screen p-5 pt-10  ${
           open ? 'w-72' : 'w-20'
         } duration-300 relative `}
       >
