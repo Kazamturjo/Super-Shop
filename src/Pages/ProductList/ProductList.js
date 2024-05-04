@@ -36,10 +36,9 @@ const ProductList = () => {
     fetchData();
   }, []);
 
-  // Handle select change
   const handleSelectChange = (event) => {
     const selectedOption = event.target.value;
-    setSearchParams({ category: selectedOption }); // Update URL parameter
+    setSearchParams({ category: selectedOption });
   };
 
   return (
