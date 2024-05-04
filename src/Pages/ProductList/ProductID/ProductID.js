@@ -4,6 +4,7 @@ import { Link, useParams, NavLink, Outlet } from 'react-router-dom';
 import axios from 'axios';
 
 const ProductID = () => {
+
   const [cart, setCart] = useState([]);
   const activeStyles = {
     fontWeight: 'bold',
@@ -14,16 +15,21 @@ const ProductID = () => {
   const [current, setCurrent] = useState(null);
 
   useEffect(() => {
-    axios
-      .get(`https://fakestoreapi.com/products/${id}`)
-      .then((res) => {
-        setCurrent(res.data);
-      })
-      .catch((err) => {
-        console.error('Error fetching data', err);
-      });
-    const savedCartItems = JSON.parse(localStorage.getItem('cartItems'));
-    setCart(savedCartItems === null ? [] : savedCartItems);
+    const fetchData = async () => {
+      try {
+        const response = await fetch (`http://localhost:5000/product/${id}`);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const json = await response.json();
+        setCurrent(json.data); 
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+      
+    };
+    
+    fetchData();
   }, [id]);
   console.log(cart);
 
@@ -37,7 +43,7 @@ const ProductID = () => {
 
   return (
     <>
-      <div className="text-2xl p-4 bg-gray-500 w-72 rounded-3xl border border-gray-700 hover:shadow-2xl transition duration-300 ease-in-out transform hover:scale-105">
+      <div className="text-2xl p-4  bg-gray-500 w-72 rounded-3xl border border-gray-700 hover:shadow-2xl transition duration-300 ease-in-out transform hover:scale-105">
         <Link
           to="/productList"
           className="back-button flex items-center text-white"
@@ -52,7 +58,7 @@ const ProductID = () => {
       </div>
       {current ? (
         <div className="ID-container">
-          <div className="pt-4">
+          <div className="pt-4 items-center">
             <img
               src={current.image}
               style={{ width: '300px', margin: '20px' }}

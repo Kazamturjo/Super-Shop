@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 const Header = () => {
   return (
-    <header className="sticky top-0 z-999 flex w-full bg-white drop-shadow-2xl dark:bg-darkpurple dark:drop-shadow-2xl">
+    <header className="sticky  top-0 z-30  flex w-full bg-white drop-shadow-2xl dark:bg-darkpurple dark:drop-shadow-2xl">
       <div className="flex flex-grow items-center justify-between py-4 px-4 shadow-2 md:px-6 2xl:px-11">
         <div className="flex items-center gap-2 sm:gap-4 lg:hidden">
           {/* <!-- Hamburger Toggle BTN --> */}
@@ -58,10 +58,10 @@ const Header = () => {
           </Link>
         </div>
 
-        <div className="hidden sm:block">
+        <div className="hidden sm:block ">
           <form action="https://formbold.com/s/unique_form_id" method="POST">
             <div className="relative">
-              <button className="absolute top-1/2 left-0 -translate-y-1/2">
+              <button className="absolute top-1/2 left-0 -translate-y-1/2 borde">
                 <svg
                   className="fill-body hover:fill-primary dark:fill-bodydark dark:hover:fill-primary"
                   width="20"
@@ -113,9 +113,7 @@ const Header = () => {
 
         <div className="flex items-center gap-3 2xsm:gap-7">
           <ul className="flex items-center gap-2 2xsm:gap-4">
-            {/* <!-- Dark Mode Toggler --> */}
-            {/* <DarkModeSwitcher /> */}
-            {/* <!-- Dark Mode Toggler --> */}
+          
             <Link to="/cart">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -132,9 +130,7 @@ const Header = () => {
                 />
               </svg>
             </Link>
-            {/* <!-- Notification Menu Area --> */}
-            {/* <DropdownNotification /> */}
-            {/* <!-- Notification Menu Area --> */}
+           
 
             {/* <!-- Chat Notification Area --> */}
             {/* <DropdownMessage /> */}

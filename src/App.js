@@ -7,6 +7,7 @@ import Profile from "./Pages/Profile/Profile";
 import Recive from "./Pages/Recive/Recive";
 import DailyMonthSall from "./Pages/Daily Sall & Month/DailyMonthSall";
 import ProductID from "./Pages/ProductList/ProductID/ProductID";
+import Cart from "./Pages/Cart/Cart";
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
         <Route path="/profile" element={<Profile/>} />
         <Route path="/dailySales" element={<DailyMonthSall/>} />
         <Route path="/product/:id" element={<ProductID/>} />
+        <Route path="/cart" element={<Cart/>} />
+        
 
 
         </Route>
