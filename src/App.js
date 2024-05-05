@@ -8,21 +8,26 @@ import Recive from "./Pages/Recive/Recive";
 import DailyMonthSall from "./Pages/Daily Sall & Month/DailyMonthSall";
 import ProductID from "./Pages/ProductList/ProductID/ProductID";
 import Cart from "./Pages/Cart/Cart";
+import { useState } from "react";
 
 function App() {
+const [cart,setCart]=useState([])
+
+
+
   return (
     <div className="">
       <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layoyut/>}>
-        <Route path="/dashboard" element={<Dashborad/>} />
-        <Route path="/productList" element={<ProductList/>} />
+        <Route path="/" element={<Layoyut cart={cart} setCart={setCart}/>}>
+        <Route path="/" element={<Dashborad/>} />
+        <Route path="/productList" element={<ProductList cart={cart} setCart={setCart}/>} />
         <Route path="/createProduct" element={<CreateProduct/>} />
         <Route path="/receive" element={<Recive/>} />
         <Route path="/profile" element={<Profile/>} />
         <Route path="/dailySales" element={<DailyMonthSall/>} />
-        <Route path="/product/:id" element={<ProductID/>} />
-        <Route path="/cart" element={<Cart/>} />
+        <Route path="/product/:id" element={<ProductID cart={cart} setCart={setCart}/>} />
+        <Route path="/cart" element={<Cart cart={cart} setCart={setCart}/>} />
         
 
 
