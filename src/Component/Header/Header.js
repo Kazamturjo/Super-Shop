@@ -1,8 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Cart from '../../Pages/Cart/Cart';
 
+const Header = ({ cart, setCart }) => {
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
-const Header = ({cart,setCart}) => {
+  const toggleCart = () => {
+    setIsCartOpen(!isCartOpen);
+  };
 
   useEffect(() => {
     try {
@@ -14,19 +19,17 @@ const Header = ({cart,setCart}) => {
       }
     } catch (error) {
       console.error('Error parsing JSON from localStorage:', error);
-  
+
       setCart([]);
     }
-   
   }, []);
 
   return (
-    <header className="sticky  top-0 z-30  flex w-full bg-white drop-shadow-2xl dark:bg-darkpurple dark:drop-shadow-2xl">
+    <>
+
+    <header className="sticky z-10 top-0  flex w-full bg-white drop-shadow-2xl dark:bg-darkpurple dark:drop-shadow-2xl">
       <div className="flex flex-grow items-center justify-between py-4 px-4 shadow-2 md:px-6 2xl:px-11">
-        <div className="flex items-center gap-2 sm:gap-4 lg:hidden">
-     
-        
-        </div>
+        <div className="flex items-center gap-2 sm:gap-4 lg:hidden"></div>
 
         <div className="hidden sm:block ">
           <form action="https://formbold.com/s/unique_form_id" method="POST">
@@ -82,41 +85,40 @@ const Header = ({cart,setCart}) => {
         </div>
 
         <div className="flex items-center gap-3 2xsm:gap-7">
-          <ul className="flex items-center gap-2 2xsm:gap-4">
-          
-            <Link to="/cart"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6 relative"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
-                />
-              </svg>
-              <span className="absolute bg-blue-400 text-white rounded-full top-1  right-3 w-6 h-6 text-center transition-all duration-500">
-      {cart?.length}
-    </span>
-            </Link>
-           
-
-            {/* <!-- Chat Notification Area --> */}
-            {/* <DropdownMessage /> */}
-            {/* <!-- Chat Notification Area --> */}
+          <ul className="flex items-center gap-2 2xsm:gap-4  ">
+            {/* Wrap the svg inside the Link */}
+            <div>
+              <button onClick={toggleCart}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-6 h-6 relative"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+                  />
+                </svg>
+                {/* Display the cart count */}
+                <span className="absolute bg-blue-400 text-white rounded-full top-1 right-3 w-6 h-6 text-center transition-all duration-500">
+                  {cart?.length}
+                </span>
+              </button>
+            </div>
           </ul>
-
-          {/* <!-- User Area --> */}
-          {/* <DropdownUser /> */}
-          {/* <!-- User Area --> */}
         </div>
       </div>
     </header>
+    {isCartOpen && (
+      <div className="p-4 rounded-lg h-screen z-10 fixed top-0 right-0 bottom-0 left-0">
+        <Cart cart={cart} setCart={setCart} toggleCart={toggleCart} />
+      </div>
+    )}
+        </>
   );
 };
 

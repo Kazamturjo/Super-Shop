@@ -23,11 +23,11 @@ const [cart,setCart]=useState([])
         <Route path="/" element={<Dashborad/>} />
         <Route path="/productList" element={<ProductList cart={cart} setCart={setCart}/>} />
         <Route path="/createProduct" element={<CreateProduct/>} />
-        <Route path="/receive" element={<Recive/>} />
+        <Route path="/receipt" element={<Recive/>} />
         <Route path="/profile" element={<Profile/>} />
         <Route path="/dailySales" element={<DailyMonthSall/>} />
         <Route path="/product/:id" element={<ProductID cart={cart} setCart={setCart}/>} />
-        <Route path="/cart" element={<Cart cart={cart} setCart={setCart}/>} />
+        {/* <Route path="/cart" element={<Cart cart={cart} setCart={setCart}/>} /> */}
         
 
 

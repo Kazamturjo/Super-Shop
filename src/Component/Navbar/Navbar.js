@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Dashborad from '../../Pages/Dashboard/Dashborad';
-import ProductList from '../../Pages/ProductList/ProductList';
-import DailyMonthSall from '../../Pages/Daily Sall & Month/DailyMonthSall';
 
 const Navbar = () => {
   const [open, setOpen] = useState(true);
@@ -14,7 +11,7 @@ const Navbar = () => {
   return (
     <div className="flex">
       <div
-        className={` bg-gray-900 h-screen p-5 pt-10   ${
+        className={` bg-gray-900 h-screen p-5 pt-10 z-10   ${
           open ? 'w-72' : 'w-20'
         } duration-300 relative `}
       >
@@ -36,38 +33,32 @@ const Navbar = () => {
           />
         </svg>
         <Link to="/">
-            <div className="inline-flex mt-6">
+          <div className="inline-flex mt-6">
             <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className={`w-9 h-9  bg-amber-300 text-4xl font-bold p-1 rounded  cursor-pointer duration-500 ${
-              open && 'rotate-[360deg] '
-            } ${!open && 'w-9 h-9'} block float-left  mr-2 `}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-            />
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
-            />
-          </svg>
-              <Link
-                to="/"
-                className={`text-white origin-left font-medium text-xl duration-300 ${
-                  !open && 'scale-0 hidden'
-                }`}
-              >
-                Super Shop
-              </Link>
-            </div>
-          </Link>
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className={`w-9 h-9  bg-purple-400  text-4xl font-bold p-1 rounded  cursor-pointer duration-500 hover:scale-105 ${
+                open && 'rotate-[360deg] '
+              } ${!open && 'w-9 h-9'} block float-left  mr-2 `}
+            >
+              <path
+                fillRule="evenodd"
+                d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
+                clipRule="evenodd"
+              />
+            </svg>
+
+            <Link
+              to="/"
+              className={`text-white origin-left font-medium text-xl duration-300 hover:scale-105 ${
+                !open && 'scale-0 hidden'
+              }`}
+            >
+              Super Shop
+            </Link>
+          </div>
+        </Link>
 
         <div className="translate transform mt-11 overflow-hidden  ">
           <Link to="/" className="">
@@ -78,7 +69,7 @@ const Navbar = () => {
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className={`w-9 h-9  text-black bg-red-300 text-4xl rounded  p-1 cursor-pointer duration-500 ${
+                className={`w-9 h-9  text-black bg-gray-300 text-4xl rounded p-1 cursor-pointer duration-500 hover:scale-105 ${
                   open && 'rotate-[360deg] '
                 } ${!open && 'w-7 h-7'} block float-left mr-2`}
               >
@@ -90,7 +81,7 @@ const Navbar = () => {
               </svg>
               <Link
                 to="/"
-                className={`text-white origin-left font-medium text-xl duration-300 ${
+                className={`text-white origin-left font-medium text-xl duration-300 hover:scale-105 ${
                   !open && 'scale-0 hidden'
                 }`}
               >
@@ -104,7 +95,7 @@ const Navbar = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
-                className={`w-9 h-9  text-black bg-red-300 text-4xl rounded  p-1 cursor-pointer duration-500 ${
+                className={`w-9 h-9 hover:scale-105  text-black bg-gray-300 text-4xl rounded  p-1 cursor-pointer duration-500 ${
                   open && 'rotate-[360deg] '
                 } ${!open && 'w-7 h-7'} block float-left mr-2`}
               >
@@ -121,7 +112,7 @@ const Navbar = () => {
               </svg>
               <Link
                 to="/productList"
-                className={`text-white origin-left font-medium text-xl duration-300 ${
+                className={`text-white origin-left font-medium text-xl duration-300 hover:scale-105 ${
                   !open && 'scale-0 hidden'
                 }`}
               >
@@ -135,7 +126,7 @@ const Navbar = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
-                className={`w-9 h-9  text-black text-4xl bg-red-300  rounded  p-1 cursor-pointer duration-500 ${
+                className={`w-9 h-9  text-black text-4xl bg-gray-300 hover:scale-105  rounded  p-1 cursor-pointer duration-500 ${
                   open && 'rotate-[360deg] '
                 } ${!open && 'w-7 h-7'} block float-left mr-2`}
               >
@@ -147,7 +138,7 @@ const Navbar = () => {
               </svg>
               <Link
                 to="/createProduct"
-                className={`text-white origin-left font-medium text-xl duration-300 ${
+                className={`text-white origin-left font-medium text-xl duration-300 hover:scale-105 ${
                   !open && 'scale-0 hidden'
                 }`}
               >
@@ -162,7 +153,7 @@ const Navbar = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
-                className={`w-9 h-9  bg-red-300 text-4xl rounded text-black p-1 cursor-pointer duration-500 ${
+                className={`w-9 h-9  bg-gray-300 text-4xl rounded text-black p-1 cursor-pointer duration-500 hover:scale-105  ${
                   open && 'rotate-[360deg] '
                 } ${!open && 'w-7 h-7'} block float-left mr-2`}
               >
@@ -174,7 +165,7 @@ const Navbar = () => {
               </svg>
               <Link
                 to="/profile"
-                className={`text-white origin-left font-medium text-xl duration-300 ${
+                className={`text-white origin-left font-medium text-xl duration-300 hover:scale-110 ${
                   !open && 'scale-0 hidden'
                 }`}
               >
@@ -183,35 +174,13 @@ const Navbar = () => {
             </div>
           </Link>
 
-          <Link to="/cart">
+          <Link to="/receipt">
             <div className="flex mt-5">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
-                className={`w-9 h-9  bg-red-300 text-4xl rounded text-black p-1 cursor-pointer duration-500 ${
-                  open && 'rotate-[360deg] '
-                } ${!open && 'w-7 h-7'} block float-left mr-2`}
-              >
-                <path d="M2.25 2.25a.75.75 0 0 0 0 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 0 0-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 0 0 0-1.5H5.378A2.25 2.25 0 0 1 7.5 15h11.218a.75.75 0 0 0 .674-.421 60.358 60.358 0 0 0 2.96-7.228.75.75 0 0 0-.525-.965A60.864 60.864 0 0 0 5.68 4.509l-.232-.867A1.875 1.875 0 0 0 3.636 2.25H2.25ZM3.75 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM16.5 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" />
-              </svg>
-              <Link
-                to="/cart"
-                className={`text-white origin-left font-medium text-xl duration-300 ${
-                  !open && 'scale-0 hidden'
-                }`}
-              >
-                Cart
-              </Link>
-            </div>
-          </Link>
-          <Link to="/receive">
-            <div className="inline-flex mt-6">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className={`w-9 h-9  bg-red-300 text-4xl rounded text-black p-1 cursor-pointer duration-500 ${
+                className={`w-9 h-9  bg-gray-300 text-4xl hover:scale-105 rounded text-black p-1 cursor-pointer duration-500 ${
                   open && 'rotate-[360deg] '
                 } ${!open && 'w-7 h-7'} block float-left mr-2`}
               >
@@ -222,12 +191,12 @@ const Navbar = () => {
                 />
               </svg>
               <Link
-                to="/receive"
-                className={`text-white origin-left font-medium text-xl duration-300 ${
+                to="/receipt"
+                className={`text-white origin-left font-medium text-xl duration-300 hover:scale-105 ${
                   !open && 'scale-0 hidden'
                 }`}
               >
-                Receive
+                Receipt
               </Link>
             </div>
           </Link>
@@ -237,7 +206,7 @@ const Navbar = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
-                className={`w-9 h-9  bg-red-300 text-4xl rounded text-black p-1 cursor-pointer duration-500 ${
+                className={`w-9 h-9  bg-gray-300 text-4xl hover:scale-105 rounded text-black p-1 cursor-pointer duration-500 ${
                   open && 'rotate-[360deg] '
                 } ${!open && 'w-7 h-7'} block float-left mr-2`}
               >
@@ -249,7 +218,7 @@ const Navbar = () => {
               </svg>
               <Link
                 to="/dailySales"
-                className={`text-white origin-left font-medium text-xl duration-300 ${
+                className={`text-white origin-left font-medium text-xl duration-300 hover:scale-105 ${
                   !open && 'scale-0 hidden'
                 }`}
               >
@@ -259,8 +228,6 @@ const Navbar = () => {
           </Link>
         </div>
       </div>
-
-      <div>{/* <h1>Home page</h1> */}</div>
     </div>
   );
 };

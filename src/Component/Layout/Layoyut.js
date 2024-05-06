@@ -9,7 +9,7 @@ const Layoyut = ({cart,setCart}) => {
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark">
       <div className="flex h-screen overflow-hidden">
-        <Navbar/>
+        <Navbar cart={cart} setCart={setCart}/>
        
         <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
           <Header cart={cart} setCart={setCart}/>
