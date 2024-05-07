@@ -74,6 +74,7 @@ const ProductID = ({cart, setCart}) => {
        class="bg-gray-300 h-96 w-[60vh] rounded-lg shadow-md bg-cover bg-center object-container"></div>
   <div class="w-56 md:w-72 bg-white -mt-10 shadow-lg rounded-lg overflow-hidden">
     <div class="py-2 text-center font-bold uppercase tracking-wide text-gray-800">{current.category}</div>
+    <div class="py-2 text-center font-bold uppercase tracking-wide text-gray-800">{current.description}</div>
     <div class="flex items-center justify-between py-2 px-3 bg-gray-400 ">
       <p class="text-5ray-800 font-bold ">${current.price}</p>
       <button onClick={addToCart} class=" bg-gray-800 text-xs text-white px-2 py-1 font-semibold rounded uppercase hover:bg-gray-700">Add to cart</button>
