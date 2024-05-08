@@ -44,6 +44,7 @@ const CreateProduct = () => {
         deleteDate: '',
         category: '',
         image: '',
+        stock:'0'
       });
     })
     .catch((err) => {

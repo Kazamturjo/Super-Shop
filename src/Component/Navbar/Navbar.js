@@ -7,11 +7,13 @@ const Navbar = () => {
   const handleToggle = () => {
     setOpen(!open);
   };
-
+  // const handleDropdown = () => {
+  //   document.getElementById('dropdownMenu').classList.toggle('hidden');
+  // };
   return (
     <div className="flex">
       <div
-        className={` bg-gray-900 h-screen p-5 pt-10 z-10   ${
+        className={` bg-gray-900 h-screen p-5  z-10   ${
           open ? 'w-72' : 'w-20'
         } duration-300 relative `}
       >
@@ -51,7 +53,7 @@ const Navbar = () => {
 
             <Link
               to="/"
-              className={`text-white origin-left font-medium text-xl duration-300 hover:scale-105 ${
+              className={`text-white origin-left font-medium text-2xl duration-300 hover:scale-105 ${
                 !open && 'scale-0 hidden'
               }`}
             >
@@ -60,7 +62,8 @@ const Navbar = () => {
           </div>
         </Link>
 
-        <div className="translate transform mt-11 overflow-hidden  ">
+        <h3 className="mt-20 text-gray-500 text-lg font-semibold ">MENU</h3>
+        <div className="translate transform mt-3 overflow-hidden  ">
           <Link to="/" className="">
             <div className="inline-flex ">
               <svg
@@ -89,6 +92,7 @@ const Navbar = () => {
               </Link>
             </div>
           </Link>
+
           <Link to="/productList">
             <div className="inline-flex mt-6">
               <svg
@@ -117,6 +121,40 @@ const Navbar = () => {
                 }`}
               >
                 ProductList
+              </Link>
+            </div>
+          </Link>
+          <div className="mt-4">
+            <hr />
+          </div>
+
+          <h3 className=" mt-4 text-gray-500 text-lg font-semibold text-bodydark2">
+            ADMIN
+          </h3>
+          <Link to="/table-list">
+            <div className="inline-flex mt-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className={`w-9 h-9 hover:scale-105  text-black bg-gray-300 text-4xl rounded  p-1 cursor-pointer duration-500 ${
+                  open && 'rotate-[360deg] '
+                } ${!open && 'w-7 h-7'} block float-left mr-2`}
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M1.5 5.625c0-1.036.84-1.875 1.875-1.875h17.25c1.035 0 1.875.84 1.875 1.875v12.75c0 1.035-.84 1.875-1.875 1.875H3.375A1.875 1.875 0 0 1 1.5 18.375V5.625ZM21 9.375A.375.375 0 0 0 20.625 9h-7.5a.375.375 0 0 0-.375.375v1.5c0 .207.168.375.375.375h7.5a.375.375 0 0 0 .375-.375v-1.5Zm0 3.75a.375.375 0 0 0-.375-.375h-7.5a.375.375 0 0 0-.375.375v1.5c0 .207.168.375.375.375h7.5a.375.375 0 0 0 .375-.375v-1.5Zm0 3.75a.375.375 0 0 0-.375-.375h-7.5a.375.375 0 0 0-.375.375v1.5c0 .207.168.375.375.375h7.5a.375.375 0 0 0 .375-.375v-1.5ZM10.875 18.75a.375.375 0 0 0 .375-.375v-1.5a.375.375 0 0 0-.375-.375h-7.5a.375.375 0 0 0-.375.375v1.5c0 .207.168.375.375.375h7.5ZM3.375 15h7.5a.375.375 0 0 0 .375-.375v-1.5a.375.375 0 0 0-.375-.375h-7.5a.375.375 0 0 0-.375.375v1.5c0 .207.168.375.375.375Zm0-3.75h7.5a.375.375 0 0 0 .375-.375v-1.5A.375.375 0 0 0 10.875 9h-7.5A.375.375 0 0 0 3 9.375v1.5c0 .207.168.375.375.375Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+
+              <Link
+                to="/table-list"
+                className={`text-white origin-left font-medium text-xl duration-300 hover:scale-105 ${
+                  !open && 'scale-0 hidden'
+                }`}
+              >
+                List/Table
               </Link>
             </div>
           </Link>

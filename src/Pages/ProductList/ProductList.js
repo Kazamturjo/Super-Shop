@@ -5,18 +5,29 @@ const ProductList = ({cart,setCart}) => {
   const [data, setData] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const typeFilter = searchParams.get('category');
+  const [currentPage, setCurrentPage] = useState(1);
+  const productPerPage = 4;
+  
+
+  const paginate=(pageNumber)=>{
+    setCurrentPage(pageNumber)
+  }
+
+  
 
   const [options] = useState([
     { value: 't-shirt', label: 'T-shirt' },
     { value: 'hoodie', label: 'Hoodie' },
     { value: 'jacket', label: 'Jacket' },
     { value: 'shoe', label: 'Shoe' },
-    { value: '', label: 'Clear' }
+
   ]);
 
   const filterData = (selectedOption) => {
     if (!selectedOption) return data; // If no option selected, return all data
-    return data.filter(product => product.category && product.category.toLowerCase() === selectedOption.toLowerCase());
+    return data.filter(product => product.category && product.category.toLowerCase() === selectedOption.
+    toLowerCase());
+    
   };
 
   // Fetch data from API
@@ -35,6 +46,10 @@ const ProductList = ({cart,setCart}) => {
     };
     fetchData();
   }, []);
+    
+  const indexOfLastProduct = currentPage * productPerPage;
+const indexOfFirstProduct = indexOfLastProduct - productPerPage;
+const currentProducts = filterData(typeFilter).slice(indexOfFirstProduct, indexOfLastProduct);
 
 
   useEffect(() => {
@@ -88,9 +103,9 @@ const ProductList = ({cart,setCart}) => {
           <option key={index} value={option.value}>{option.label}</option>
         ))}
       </select>
-      <div className="grid grid-cols-1 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-3 gap-4 ml-4">
-        {filterData(typeFilter).map((product, index) => (
-          <div className="group my-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
+      <div className="grid grid-cols-1 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4 gap-2">
+        {currentProducts.map((product, index) => (
+          <div className="group my-2 flex flex-wrap w-full max-w-prose flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
               <Link to={`/product/${product._id}`} key={index} className="card-link">
                 
               <div
@@ -110,7 +125,7 @@ const ProductList = ({cart,setCart}) => {
                   </Link>
               <div className="mt-4 px-5 pb-5">
                 <a href="#">
-                  <h5 className="text-xl tracking-tight text-slate-900">
+                  <h5 className="text-xl tracking-tight text-slate-900 font-bold">
                     {product.productName}
                   </h5>
                 </a>
@@ -135,6 +150,22 @@ const ProductList = ({cart,setCart}) => {
             </div>
         ))}
       </div>
+      <div className="flex justify-center mt-7">
+          {Array.from(
+    { length: Math.ceil(filterData(typeFilter).length / productPerPage) },
+    (_, index) => (
+              <button
+                key={index}
+                onClick={() => paginate(index + 1)}
+                className={`mx-1 px-3 py-1 bg-gray-200 rounded-lg hover:bg-gray-300 focus:outline-none ${
+                  currentPage === index + 1 ? "bg-gray-400" : ""
+                }`}
+              >
+                {index + 1}
+              </button>
+            )
+          )}
+        </div>
     </div>
   );
 };

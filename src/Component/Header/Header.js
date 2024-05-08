@@ -104,7 +104,7 @@ const Header = ({ cart, setCart }) => {
                   />
                 </svg>
                 {/* Display the cart count */}
-                <span className="absolute bg-blue-400 text-white rounded-full top-1 right-3 w-6 h-6 text-center transition-all duration-500">
+                <span className="absolute bg-blue-400 text-white rounded-full top-1 right-7 w-6 h-6 text-center transition-all duration-500">
                   {cart?.length}
                 </span>
               </button>

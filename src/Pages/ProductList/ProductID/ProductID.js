@@ -56,7 +56,7 @@ const ProductID = ({cart, setCart}) => {
 
   return (
     <>
-      <div className="lg:text-2xl lg:p-4 md:p-3 p-2  bg-gray-500 lg:w-72 md:w-48 w-48   rounded-3xl border border-gray-700 hover:shadow-2xl transition duration-300 ease-in-out transform hover:scale-105 ml-6">
+      <div className="lg:text-2xl lg:p-4 md:p-3 p-2   bg-gray-500 lg:w-72 md:w-48 w-48   rounded-3xl border border-gray-700 hover:shadow-2xl transition duration-300 ease-in-out transform hover:scale-105 ml-6">
         <Link
           to="/productList"
           className="back-button flex items-center text-white "
@@ -69,7 +69,7 @@ const ProductID = ({cart, setCart}) => {
       {current ? (
   <div className="ID-container">
     <div className="pt-4 items-center relative">
-    <div class="flex flex-col justify-center items-center max-w-sm mx-auto my-8 ">
+    <div class="flex flex-col justify-center items-center max-w-sm mx-auto my-8 p-4 ">
   <div style={{backgroundImage: `url(${current.image})`}} 
        class="bg-gray-300 h-96 w-[60vh] rounded-lg shadow-md bg-cover bg-center object-container"></div>
   <div class="w-56 md:w-72 bg-white -mt-10 shadow-lg rounded-lg overflow-hidden">
@@ -84,7 +84,7 @@ const ProductID = ({cart, setCart}) => {
       
       <div className='absolute top-0 left-1/2 transform -translate-x-1/2 pt-2'>
   {options && (
-    <select className="van-type bg-white drop-shadow-2xl font-abc text-xl transform hover:scale-105 transition-all duration-300 text-black px-4 lg:py-2 rounded mb-2 md:mb-0">
+    <select className="van-type bg-white drop-shadow-2xl shadow-xl font-abc text-xl transform hover:scale-105 transition-all duration-300 text-black px-4 lg:py-2 rounded mb-2 md:mb-0">
       <option value="">All</option>
       {options.map((option, index) => (
         <option key={index} value={option.value}>{option.label}</option>
