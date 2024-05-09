@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { Fade } from 'react-awesome-reveal';
 import { Link, useSearchParams } from 'react-router-dom';
 
 const ProductList = ({cart,setCart}) => {
   const [data, setData] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const typeFilter = searchParams.get('category');
+
   const [currentPage, setCurrentPage] = useState(1);
   const productPerPage = 4;
   
@@ -95,6 +97,8 @@ const currentProducts = filterData(typeFilter).slice(indexOfFirstProduct, indexO
   }
 
   return (
+    <Fade cascadia duration={2000} damping={1.2} direction="left" >
+
     <div className='bg-gray-200 p-2'>
       <h1 className="lg:text-3xl text-xl font-bold text-center  text-black ">Explore our Product options</h1>
       <select className="van-type bg-white drop-shadow-2xl font-abc text-xl transform hover:scale-105 transition-all duration-300 text-black px-4 py-2 rounded mb-2 md:mb-0" onChange={handleSelectChange} value={typeFilter}>
@@ -104,6 +108,8 @@ const currentProducts = filterData(typeFilter).slice(indexOfFirstProduct, indexO
         ))}
       </select>
       <div className="grid grid-cols-1 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4 gap-2">
+      <Fade cascadia duration={2000} damping={1.2} direction="left" >
+
         {currentProducts.map((product, index) => (
           <div className="group my-2 flex flex-wrap w-full max-w-prose flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
               <Link to={`/product/${product._id}`} key={index} className="card-link">
@@ -149,11 +155,14 @@ const currentProducts = filterData(typeFilter).slice(indexOfFirstProduct, indexO
               </div>
             </div>
         ))}
+        </Fade>
       </div>
       <div className="flex justify-center mt-7">
           {Array.from(
     { length: Math.ceil(filterData(typeFilter).length / productPerPage) },
     (_, index) => (
+      <Fade cascadia duration={2000} damping={1.2} direction="left" >
+
               <button
                 key={index}
                 onClick={() => paginate(index + 1)}
@@ -163,10 +172,12 @@ const currentProducts = filterData(typeFilter).slice(indexOfFirstProduct, indexO
               >
                 {index + 1}
               </button>
+              </Fade>
             )
           )}
         </div>
     </div>
+    </Fade>
   );
 };
 

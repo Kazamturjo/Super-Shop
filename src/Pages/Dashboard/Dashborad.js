@@ -1,7 +1,10 @@
 import React from 'react'
+import { Fade } from 'react-awesome-reveal'
 
 const Dashborad = () => {
   return (
+    <Fade cascadia duration={2000} damping={1.2} direction="right" >
+
     <div class="mx-auto max-w-screen-lg px-4 py-8 sm:px-8">
     <div class="flex items-center justify-between pb-6">
       <div>
@@ -170,7 +173,7 @@ const Dashborad = () => {
       </div>
     </div>
   </div>
-  
+  </Fade>
   )
 }
 
