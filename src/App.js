@@ -10,6 +10,7 @@ import ProductID from "./Pages/ProductList/ProductID/ProductID";
 import Cart from "./Pages/Cart/Cart";
 import { useState } from "react";
 import Table from "./Admin/Table";
+import Update from "./Admin/Update/Update";
 
 function App() {
 const [cart,setCart]=useState([])
@@ -29,6 +30,7 @@ const [cart,setCart]=useState([])
         <Route path="/dailySales" element={<DailyMonthSall/>} />
         <Route path="/product/:id" element={<ProductID cart={cart} setCart={setCart}/>} />
         <Route path="/table-list" element={<Table/>} />
+        <Route path="/update/:id" element={<Update/>} />
 
         {/* <Route path="/cart" element={<Cart cart={cart} setCart={setCart}/>} /> */}
         
