@@ -20,23 +20,47 @@ const Table = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/product/all?page=1&pageSize=100');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
+        const productsUrl = 'http://localhost:5000/product/all?page=1&pageSize=100';
+        const stocksUrl = 'http://localhost:5000/stock/all/?page=1&pageSize=100';
+
+        const [productsResponse, stocksResponse] = await Promise.all([
+          fetch(productsUrl),
+          fetch(stocksUrl)
+        ]);
+
+        if (!productsResponse.ok || !stocksResponse.ok) {
+          throw new Error('One or more API requests failed');
         }
-        const jsonData = await response.json();
-        setData(jsonData.data);
+
+        const productsData = await productsResponse.json();
+        const stocksData = await stocksResponse.json();
+
+        const mergedData = productsData.data.map((product) => {
+          const stock = stocksData.data.find((stock) => stock.product_id === product._id);
+          
+          console.log(stock, 's')
+          if (stock) {
+            return {
+              ...product,
+              stockId: stock._id,
+              stockQuantity: stock.stockQuantity,
+            };
+          } else {
+            return { ...product, stockId: null, stockQuantity: 0 }; 
+          }
+        });
+
+        setData(mergedData);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Failed to fetch data:", error);
       }
     };
+
     fetchData();
   }, []);
 
-  const handleEdit = (product) => {
-    console.log(product);
-  };
-
+  console.log('dataaa',data);
+  
   return (
     <Fade cascadia duration={2000} damping={1.2} direction="bottom">
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -47,6 +71,7 @@ const Table = () => {
               <th scope="col" className="px-6 py-3">ProductID</th>
               <th scope="col" className="px-6 py-3">Category</th>
               <th scope="col" className="px-6 py-3">Image</th>
+              <th scope="col" className="px-6 py-3">stockId</th>
               <th scope="col" className="px-6 py-3">Price</th>
               <th scope="col" className="px-6 py-3">Action</th>
             </tr>
@@ -58,6 +83,8 @@ const Table = () => {
                 <td className="px-6 py-4">{item._id}</td>
                 <td className="px-6 py-4">{item.category}</td>
                 <td className="w-11 h-7 px-6 py-4"><img src={item.image} alt="Product" /></td>
+                <td className="px-6 py-4">{item.stockQuantity}</td>
+
                 <td className="px-6 py-4">${item.price}</td>
                 <td className="px-6 py-4">
                   <button onClick={() => openModal(item)} className="w-full text-center px-2 py-2 border-2 rounded-lg text-xl bg-[#EAD196] border-[#EAD196] text-slate-900 duration-700 hover:scale-110 hover:text-slate-900 hover:cursor-pointer hover:border-slate-900 hover:duration-700 flex items-center justify-center gap-2 font-bold">Edit</button>

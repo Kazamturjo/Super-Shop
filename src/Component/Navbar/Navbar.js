@@ -7,15 +7,13 @@ const Navbar = () => {
   const handleToggle = () => {
     setOpen(!open);
   };
-  // const handleDropdown = () => {
-  //   document.getElementById('dropdownMenu').classList.toggle('hidden');
-  // };
+  
   return (
     <div className="flex">
       <div
         className={` bg-gray-900 h-screen p-5  z-10   ${
           open ? 'w-72' : 'w-20'
-        } duration-300 relative `}
+        } duration-500 relative `}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
