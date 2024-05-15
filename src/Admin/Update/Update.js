@@ -7,7 +7,6 @@ import axios from "axios";
 const UpdateProduct = () => {
   const [prodDet, setProdDet] = useState([]);
   const [stockDet, setStockDet] = useState([]);
-//   const [postRequest, getRequest] = useRequest();
   const { id } = useParams();
   console.log('id',id);
   const [loading, setLoading] = useState(false);
@@ -30,7 +29,6 @@ const UpdateProduct = () => {
     
     fetchData();
   }, []);
-  console.log('dataaaUpdate',stockDet);
   
   
   useEffect(() => {
@@ -51,7 +49,6 @@ const UpdateProduct = () => {
     
     fetchData();
   }, []);
-  console.log('stock',stockDet);
   
 
   const handleUpdateData = async (event) => {
@@ -97,7 +94,7 @@ const UpdateProduct = () => {
       
         try {
           const response = await axios.post(`http://localhost:5000/stock/updateStock/${id}/${uptProdStockDetails.stockQuantity}`);
-          console.log(response.data); // Assuming you want to log the response data
+          console.log(response.data); 
 
           setLoading(false)
       
@@ -106,7 +103,7 @@ const UpdateProduct = () => {
             // navigate("/all-products");
           }
         } catch (error) {
-          console.error(error); // Log any errors if the request fails
+          console.error(error);
         }
       }
       

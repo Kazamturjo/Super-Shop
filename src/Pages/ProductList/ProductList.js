@@ -100,7 +100,7 @@ const currentProducts = filterData(typeFilter).slice(indexOfFirstProduct, indexO
     <Fade cascadia duration={2000} damping={1.2} direction="left" >
 
     <div className='bg-gray-200 p-2'>
-      <h1 className="lg:text-3xl text-xl font-bold text-center  text-black ">Explore our Product options</h1>
+      <h1 className="lg:text- 3xl text-xl font-bold text-center  text-black ">Explore our Product options</h1>
       <select className="van-type bg-white drop-shadow-2xl font-abc text-xl transform hover:scale-105 transition-all duration-300 text-black px-4 py-2 rounded mb-2 md:mb-0" onChange={handleSelectChange} value={typeFilter}>
         <option value="">All</option>
         {options.map((option, index) => (
