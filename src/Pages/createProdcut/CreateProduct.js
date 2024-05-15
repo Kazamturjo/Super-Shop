@@ -1,5 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import Swal from "sweetalert2";
+
 
 const CreateProduct = () => {
   const [data, setData] = useState({
@@ -32,6 +34,8 @@ const CreateProduct = () => {
     axios.post(`http://localhost:5000/product/add/${data.stock}`, data)
     .then((response) => {
       console.log('product added sucessful', response);
+      Swal.fire("Product Details Updated");
+
 
       setData({
         productName: '',
