@@ -11,6 +11,7 @@ import Cart from "./Pages/Cart/Cart";
 import { useState } from "react";
 import Table from "./Admin/Table";
 import Update from "./Admin/Update/Update";
+import Selles from "./Pages/Selling/Selles";
 
 function App() {
 const [cart,setCart]=useState([])
@@ -26,6 +27,7 @@ const [cart,setCart]=useState([])
         <Route path="/productList" element={<ProductList cart={cart} setCart={setCart}/>} />
         <Route path="/createProduct" element={<CreateProduct/>} />
         <Route path="/receipt" element={<Recive/>} />
+        <Route path="/selles" element={<Selles/>} />
         <Route path="/profile" element={<Profile/>} />
         <Route path="/dailySales" element={<DailyMonthSall/>} />
         <Route path="/product/:id" element={<ProductID cart={cart} setCart={setCart}/>} />

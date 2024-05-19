@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Fade } from 'react-awesome-reveal';
 import { Link, useSearchParams } from 'react-router-dom';
+import { Swal } from 'sweetalert2';
 
 const ProductList = ({cart,setCart}) => {
+
+  
   const [data, setData] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const typeFilter = searchParams.get('category');
@@ -76,30 +79,69 @@ const currentProducts = filterData(typeFilter).slice(indexOfFirstProduct, indexO
     setSearchParams({ category: selectedOption });
   };
    
-   const addToCart = (product) =>{
-    const existingProduct = cart.find((item) => item._id === product._id);
 
-    if (existingProduct) {
-      const updatedCart = cart.map((item) =>
-        item._id === existingProduct._id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      );
-
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
-      setCart(updatedCart);
-    } else {
-      const updatedCart = [...cart, { ...product, quantity: 1 }];
-
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
-      setCart(updatedCart);
+  //add to cart button
+  const addToCart = (product) => {
+    // Prompt user to enter quantity
+    const quantity = prompt('Enter the Quantity:', '1');
+    
+    // Check if quantity is valid
+    if (quantity === null || quantity === "") {
+      Swal.fire('Invalid Quantity');
+      return;
     }
+    const parseQuantity = parseInt(quantity);
+    if (isNaN(parseQuantity) || parseQuantity <= 0) {
+      Swal.fire("Invalid Quantity Amount");
+      return;
+    }
+  
+    // Prompt user to enter selling price
+    const sellingPrice = prompt("Enter the selling price", `${product.price}`);
+    if (sellingPrice === null || sellingPrice === '') {
+      Swal.fire('Invalid Price');
+      return;
+    }
+    const parseSellingPrice = parseInt(sellingPrice);
+    if (isNaN(parseSellingPrice)) {
+      Swal.fire("Invalid Price Amount");
+      return;
+    }
+  
+    // Retrieve cart from localStorage or initialize an empty array
+    let carts = JSON.parse(localStorage.getItem("cart")) || [];
+  
+    // Check if the product is already in the cart
+    const existingProductIndex = carts.findIndex(item => item._id === product._id);
+  
+    if (existingProductIndex !== -1) {
+      // If the product is already in the cart, update its quantity and total selling price
+      carts[existingProductIndex].quantity += parseQuantity;
+
+      carts[existingProductIndex].totalSellingPrice += parseSellingPrice * parseQuantity;
+    } else {
+      // If the product is not in the cart, add it
+      carts.push({
+        ...product,
+        quantity: parseQuantity,
+        sellingPrice: parseSellingPrice,
+        totalSellingPrice: parseSellingPrice * parseQuantity
+      });
+    }
+  
+    // Update cart in localStorage
+    setCart(carts)
+    localStorage.setItem("cart", JSON.stringify(carts));
+  
+    // Optionally, you can provide feedback to the user that the product has been added to the cart
+    // Swal.fire("Product added to cart!");
   }
+  
 
   return (
     <Fade cascadia duration={2000} damping={1.2} direction="left" >
 
-    <div className='bg-gray-200 p-2'>
+    <div className='bg-gray-200 p-2 lg:mt-24'>
       <h1 className="lg:text- 3xl text-xl font-bold text-center  text-black ">Explore our Product options</h1>
       <select className="van-type bg-white drop-shadow-2xl font-abc text-xl transform hover:scale-105 transition-all duration-300 text-black px-4 py-2 rounded mb-2 md:mb-0" onChange={handleSelectChange} value={typeFilter}>
         <option value="">All</option>
