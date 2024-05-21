@@ -14,8 +14,8 @@ const Cart = ({ toggleCart }) => {
   useEffect(() => {
     const storedSales = JSON.parse(localStorage.getItem("cart")) || [];
     setSales(storedSales);
-    const storedSales1 = JSON.parse(localStorage.getItem("salesPush")) || [];
-    setSalesPush(storedSales1);
+    // const storedSales1 = JSON.parse(localStorage.getItem("salesPush")) || [];
+    // setSalesPush(storedSales1);
   }, []);
 
   const totalQuantity = sales.reduce(
@@ -113,9 +113,10 @@ const Cart = ({ toggleCart }) => {
           quantitySold: getIndividualOrder.quantitySold,
           salePrice: getIndividualOrder.salePrice,
         };
-        const apiUrlPush = `${process.env.REACT_APP_API_URL}/sales/registerSales/${getIndividualOrder.discount}`;
+        const apiUrlPush = `http://localhost:5000/sales/registerSales/${getIndividualOrder.discount}`;
         try {
           const response = await axios.post(apiUrlPush, dataPush);
+          console.log('respnse',response)
           const saleIdsArrayOfObject = {
             saleId: response.data.data._id,
           };
@@ -131,7 +132,7 @@ const Cart = ({ toggleCart }) => {
         .then(async () => {
           try {
             const creatingReceipt = await axios.post(
-              `${process.env.REACT_APP_API_URL}/receipt/crtrct`,
+              `http://localhost:5000/receipt/crtrct`,
               salesIdPush
             );
             setOpen1(false);
@@ -141,7 +142,7 @@ const Cart = ({ toggleCart }) => {
             setSales([]);
            
 
-            window.location.href = `/cart/checkoutinfo/${creatingReceipt.data.data.receiptNumber}`;
+            // window.location.href = `/cart/checkoutinfo/${creatingReceipt.data.data.receiptNumber}`;
           } catch (error) {
             alert("SOMETHING WRONG1");
             console.log(error);
@@ -292,7 +293,7 @@ const Cart = ({ toggleCart }) => {
                   <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                     <div className="flex font-abc justify-between text-base font-medium text-gray-900">
                       {/* <p>Sub?total</p> */}
-                      <Paper style={{ marginTop: "20px", padding: "30px" }} elevation={4}>
+                      <Paper style={{ marginTop: "20px", padding: "30px" }} elevation={4} className='m-auto'>
             <Typography variant="h5" gutterBottom>
               Total Cart Information
             </Typography>
