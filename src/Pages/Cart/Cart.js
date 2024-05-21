@@ -1,60 +1,110 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Fade } from 'react-awesome-reveal';
+import { CardContent, Divider, Grid, Paper, Typography } from '@mui/material';
 
 
-const Cart = ({ cart, setCart, toggleCart }) => {
-  console.log(cart);
-  const [sales, setSales] = React.useState([]);
-  const [salesPush, setSalesPush] = React.useState([]);
-  const [salesIdNeedToPush, setsalesIdNeedToPush] = React.useState([]);
+const Cart = ({ toggleCart }) => {
+  const [sales, setSales] = useState([]);
+  const [salesPush, setSalesPush] = useState([]);
+  const [salesIdNeedToPush, setsalesIdNeedToPush] = useState([]);
+  const [flagCheck, setFlagCheck] = useState([]);
 
   useEffect(() => {
-    const storedSales = JSON.parse(localStorage.getItem("sales")) || [];
+    const storedSales = JSON.parse(localStorage.getItem("cart")) || [];
     setSales(storedSales);
-    // const storedSales1 = JSON.parse(localStorage.getItem("salesPush")) || [];
-    // setSalesPush(storedSales1);
+    const storedSales1 = JSON.parse(localStorage.getItem("salesPush")) || [];
+    setSalesPush(storedSales1);
   }, []);
 
+  const totalQuantity = sales.reduce(
+    (total, sale) => total + sale.quantitySold,
+    0
+  );
 
-  const handleRemoveItem = (id) => {
-    const updatedCart = cart.filter((item) => item._id !== id);
-    setCart(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
+  const totalQuantityOriginal = sales.reduce(
+    (total, sale) => total + sale.originalQuantity,
+    0
+  );
+
+  const totalPrice = sales.reduce(
+    (total, sale) => total + sale.salePrice * sale.quantitySold,
+    0
+  );
+  const totalCost = sales.reduce(
+    (total, sale) => total + sale.costPrice * sale.quantitySold,
+    0
+  );
+  const totalDiscount = sales.reduce(
+    (total, sale) => total + sale.discount * sale.quantitySold,
+    0
+  );
+  const revenue = totalPrice - totalDiscount;
+  const profit = revenue - totalCost;
+
+  const [open, setOpen] = React.useState(false);
+  const [open1, setOpen1] = React.useState(false);
+  const [deleteInput, setDeleteInput] = useState("");
+
+  const handleInputChange = (e) => {
+    setDeleteInput(e.target.value);
   };
 
-  const handleIncreaseQuantity = (id) => {
-    const updatedCart = cart.map((item) => {
-      if (item._id === id) {
-        return { ...item, quantity: item.quantity + 1 };
+  const handleCloseModal = () => {
+    setDeleteInput("");
+    setOpen(false);
+    setOpen1(false);
+  };
+
+  const isDeleteInputValid = deleteInput.trim().toLowerCase() === "delete";
+
+  // const handleDeleteProduct = async () => {
+  //   try {
+  //     sales.map(async (individualSaleID) => {});
+  //     setOpen(false);
+  //     alert("Succcessfully emptyed cart.");
+  //     localStorage.setItem("cart", JSON.stringify([]));
+  //     localStorage.setItem("salesPush", JSON.stringify([]));
+  //     setSales([]);
+  //     setSalesPush([]);
+  //   } catch (error) {
+  //     console.error("Error deleting product:", error);
+  //     alert("Error deleting product!");
+  //   }
+  // };
+
+  const handelDeleteIndividualProduct = async (needToDeleteSaleID) => {
+    console.log(needToDeleteSaleID);
+    const updatedSales = sales.filter(
+      (sale) => !needToDeleteSaleID.includes(sale.productId)
+    );
+
+    
+    localStorage.setItem("cart", JSON.stringify(updatedSales));
+    setSales(updatedSales);
+  };
+
+  const updateQuantity = (saleId, newQuantity) => {
+    const updatedSales = sales.map((sale) => {
+      if (sale.productId === saleId) {
+        return { ...sale, quantitySold: newQuantity };
       }
-      return item;
+      return sale;
     });
-    setCart(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
+
+    const allProductsValid = updatedSales.every(
+      (sale) => sale.originalQuantity >= sale.quantitySold
+    );
+    console.log(!allProductsValid);
+
+    setSales(updatedSales);
+    setFlagCheck(allProductsValid);
+
+    localStorage.setItem("cart", JSON.stringify(updatedSales));
   };
 
-  const handleDecreaseQuantity = (id) => {
-    const updatedCart = cart.map((item) => {
-      if (item._id === id && item.quantity > 1) {
-        return { ...item, quantity: item.quantity - 1 };
-      }
-      return item;
-    });
-    setCart(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
-  };
-
-  const calculateTotalPrice = () => {
-    return cart
-      .reduce((total, item) => total + item.sellingPrice * item.quantity, 0)
-      .toFixed(2);
-  };
-  
-
-  //selling confirm
-  const handleConfirm = async () => {
+  const handelConfirm = async () => {
     try {
       var salesIdPush = [];
       const postRequests = sales.map(async (getIndividualOrder) => {
@@ -63,58 +113,51 @@ const Cart = ({ cart, setCart, toggleCart }) => {
           quantitySold: getIndividualOrder.quantitySold,
           salePrice: getIndividualOrder.salePrice,
         };
-        console.log('sales',sales);
-        
-        
-          const apiUrlPush = `http://localhost:5000/sales/registerSales/${getIndividualOrder}0`;
-          try {
-            const response =  axios.post(apiUrlPush, dataPush);
-            const saleIdsArrayOfObject = {
-              saleId: response.data.data._id,
-            };
-            salesIdPush = [...salesIdPush, saleIdsArrayOfObject];
-            setsalesIdNeedToPush(salesIdPush);
-          } catch (err) {
-            console.error(err);
-            // alert("SOMETHING WRONG2");
-          }
-        });
-     
-      // After all sales are registered, proceed to create receipt and report daily sales
+        const apiUrlPush = `${process.env.REACT_APP_API_URL}/sales/registerSales/${getIndividualOrder.discount}`;
+        try {
+          const response = await axios.post(apiUrlPush, dataPush);
+          const saleIdsArrayOfObject = {
+            saleId: response.data.data._id,
+          };
+          salesIdPush = [...salesIdPush, saleIdsArrayOfObject];
+          setsalesIdNeedToPush(salesIdPush);
+        } catch (err) {
+          console.error(err);
+          // alert("SOMETHING WRONG2");
+        }
+      });
+
       Promise.all(postRequests)
-      .then(async ()=>{
-        try{
-          const creatingReceipt= await axios.post(
-            `http://localhost:5000/receipt/crtrct`,
-             salesIdPush        
-            )
-          console.log(creatingReceipt.data.data);
-          localStorage.setItem('cart', JSON.stringify([]));
-          // localStorage.setItem("salesPush", JSON.stringify([]));
-          setSales([]);
-          // setSalesPush([]);
-          // window.location.href = `/cart/checkoutinfo/${creatingReceipt.data.data.receiptNumber}`;
+        .then(async () => {
+          try {
+            const creatingReceipt = await axios.post(
+              `${process.env.REACT_APP_API_URL}/receipt/crtrct`,
+              salesIdPush
+            );
+            setOpen1(false);
+            console.log(creatingReceipt.data.data);
+            localStorage.setItem("cart", JSON.stringify([]));
+            // localStorage.setItem("salesPush", JSON.stringify([]));
+            setSales([]);
+           
 
-
-        }catch (error) {
+            window.location.href = `/cart/checkoutinfo/${creatingReceipt.data.data.receiptNumber}`;
+          } catch (error) {
             alert("SOMETHING WRONG1");
             console.log(error);
           }
-      })
-      .catch((error) => {
-        console.error("Error during requests:", error);
-      });
-     
-  
-
-      
-        } catch (error) {
-      console.error('Error during confirmation:', error);
-      alert('Something went wrong during confirmation. Please try again.');
+        })
+        .catch((error) => {
+          console.error("Error during requests:", error);
+        });
+    } catch (error) {
+      console.log(error);
+      alert("Something wrong happened");
     }
   };
-  console.log("cart data",cart);
 
+  console.log('sale',sales);
+  
   return (
     <Fade cascadia duration={1000} damping={2.2} direction="bottom" >
 
@@ -125,7 +168,7 @@ const Cart = ({ cart, setCart, toggleCart }) => {
         <div className="fixed overflow-hidden">
           <div className="absolute  overflow-hidden">
             <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 ">
-              <div className="w-96 pointer-events-auto  ">
+              <div className="w-[500px] pointer-events-auto  ">
                 <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
                   <div className="flex-1 px-4 py-6 sm:px-6">
                     <div className="lg:flex items-start justify-between">
@@ -164,78 +207,33 @@ const Cart = ({ cart, setCart, toggleCart }) => {
                       <div className="flow-root">
                         <ul
                           role="list"
-                          className="-my-6 divide-y font-abc divide-gray-200"
+                          className="-my-6 divide-y font-abc divide-gray-200 grid grid-rows-1"
                         >
-                          {cart.map((dt) => (
-                            <li className="flex py-6" key={dt._id}>
+                          {sales.map((sale) => (
+                            <li className="flex py-6" key={sale._id}>
                               <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                <img src={dt.image} alt="" />
+                                <img src={sale.image} alt="" />
                               </div>
                               <div className="ml-4 flex flex-1 flex-col">
                                 <div>
                                   <div className="flex justify-between text-base font-medium text-gray-900">
-                                    <h3>{dt.productName}</h3>
-                                    <p className="text-purple-500 font-semibold">
-                                      ${(dt.totalSellingPrice).toFixed(2)}
-                                    </p>
+                                    <h3>{sale.productName}</h3>
+                                   
                                   </div>
                                   <p className="mt-1 text-sm text-gray-500">
-                                    {dt.description}
+                                    {sale.description}
                                   </p>
                                 </div>
                                 <div className="flex flex-1 items-center justify-between text-sm">
-                                  <p className="text-gray-500">
-                                    {dt.quantity} items
+                                  <p className="text-gzzray-500">
+                                    {sale.quantitySold} items
                                   </p>
                                   <div className="flex">
-                                    <button
-                                      type="button"
-                                      className="font-medium text-indigo-600 hover:text-indigo-500"
-                                      onClick={() =>
-                                        handleDecreaseQuantity(dt._id)
-                                      }
-                                    >
-                                      <svg
-                                        className="h-5 w-5 hover:scale-110"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <path
-                                          strokeLinecap="round"
-                                          strokeLinejoin="round"
-                                          strokeWidth="2"
-                                          d="M20 12H4"
-                                        />
-                                      </svg>
-                                    </button>
+                                    
                                     <button
                                       type="button"
                                       className="ml-2 font-medium text-indigo-600 hover:text-indigo-500"
-                                      onClick={() =>
-                                        handleIncreaseQuantity(dt._id)
-                                      }
-                                    >
-                                      <svg
-                                        className="h-5 w-5 hover:scale-110"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <path
-                                          strokeLinecap="round"
-                                          strokeLinejoin="round"
-                                          strokeWidth="2"
-                                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                                        />
-                                      </svg>
-                                    </button>
-                                    <button
-                                      type="button"
-                                      className="ml-2 font-medium text-indigo-600 hover:text-indigo-500"
-                                      onClick={() => handleRemoveItem(dt._id)}
+                                      onClick={() => handelDeleteIndividualProduct(sale.productId)}
                                     >
                                       <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -253,25 +251,96 @@ const Cart = ({ cart, setCart, toggleCart }) => {
                                   </div>
                                 </div>
                               </div>
+                              <div className=''
+                 
+
+                >
+                  <Typography variant="body2" color="text.secondary" paragraph>
+                    Sale Price: ${parseFloat(sale.salePrice).toFixed(2)}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" paragraph>
+                    Cost Price: ${parseFloat(sale.costPrice).toFixed(2)}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" paragraph>
+                    Total: ${(sale.quantitySold * sale.salePrice).toFixed(2)}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" paragraph>
+                    Discount: ${parseFloat(sale.discount).toFixed(2)}
+                  </Typography>
+                  <Typography
+                    color="primary"
+                    level="h4"
+                    variant="plain"
+                    noWrap
+                    style={{ marginBottom: "10px" }}
+                  >
+                    Net total:{" "}
+                    {(
+                      sale.quantitySold * sale.salePrice -
+                      parseFloat(sale.discount)
+                    ).toFixed(2)}
+                  </Typography>
+                </div>
                             </li>
-                          ))}
+                            
+                        ))}
+                         
                         </ul>
                       </div>
                     </div>
                   </div>
                   <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                     <div className="flex font-abc justify-between text-base font-medium text-gray-900">
-                      <p>Subtotal</p>
-                      <p>Total Price: ${calculateTotalPrice()}</p>
+                      {/* <p>Sub?total</p> */}
+                      <Paper style={{ marginTop: "20px", padding: "30px" }} elevation={4}>
+            <Typography variant="h5" gutterBottom>
+              Total Cart Information
+            </Typography>
+            <Typography
+              color="primary"
+              level="h2"
+              variant="h5"
+              noWrap
+              style={{ marginBottom: "10px" }}
+            >
+              Net total: ${(totalPrice - totalDiscount).toFixed(2)}
+            </Typography>
+            <Divider />
+            <br />
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Typography variant="body1">
+                  Total Quantity: {totalQuantity}
+                </Typography>
+                <Typography variant="body1">
+                  Total Price: ${totalPrice.toFixed(2)}
+                </Typography>
+                <Typography variant="body1">
+                  Total Cost: ${totalCost.toFixed(2)}
+                </Typography>
+              </Grid>
+              <Grid item xs={6} style={{ textAlign: "right" }}>
+                <Typography variant="">
+                  Total Discount: ${totalDiscount.toFixed(2)}
+                </Typography>
+                <Typography variant="body1">
+                  Revenue: ${revenue.toFixed(2)}
+                </Typography>
+                <Typography variant="body1">
+                  Profit: ${profit.toFixed(2)}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Paper>
                     </div>
                     <p className="mt-0.5 text-sm text-gray-500 font-abc ">
                       Shipping and taxes calculated at checkout.
                     </p>
                     <div className="mt-6 ">
                       <button
-                        onClick={handleConfirm}
+                        onClick={handelConfirm}
                         className="w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 font-abc"
-                      >
+                        >
                         Checkout
                       </button>
                     </div>

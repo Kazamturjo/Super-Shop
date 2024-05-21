@@ -1,109 +1,437 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useParams, Outlet } from 'react-router-dom';
-import './Card.css'
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
+import axios from "axios";
+import Typography from "@mui/joy/Typography";
+import DeleteForever from "@mui/icons-material/DeleteForever";
+// import "./ProductId.css";
+import Divider from "@mui/joy/Divider";
+import Modal from "@mui/joy/Modal";
+import ModalDialog from "@mui/joy/ModalDialog";
+import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
+import Button from "@mui/joy/Button";
+import { useLocation } from "react-router-dom";
+import Swal from "sweetalert2";
 
-const ProductID = ({cart, setCart}) => {
-  const [current, setCurrent] = useState({});
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Grid,
+  TextField,
+  IconButton,
+  Paper,
+} from "@mui/material";
+import { AddCircleOutline, RemoveCircleOutline } from "@mui/icons-material";
 
-  
-  const { id } = useParams();
+const ProductID = () => {
+  const [sales, setSales] = useState([]);
+  const { productId } = useParams();
+  const [productData, setProductData] = useState([]);
+  const [stockData, setStockData] = useState([]);
+  const [quantity, setQuantity] = useState(1);
+
+  const [open, setOpen] = React.useState(false);
+  const [salePrice, setSalePrice] = useState("");
+  const [discount, setDiscount] = useState("");
+  const [salesPush, setSalesPush] = useState([]);
+  const [newSaleId, setNewSaleId] = useState("");
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch (`http://localhost:5000/product/${id}`);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const json = await response.json();
-        setCurrent(json.data); 
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-      
-    };
-    
-    fetchData();
-  }, [id]);
-  console.log(cart);
+    const storedSales = JSON.parse(localStorage.getItem("cart")) || [];
+    setSales(storedSales);
+    // const storePushedSales =
+    //   JSON.parse(localStorage.getItem("salesPush")) || [];
+    // setSalesPush(storePushedSales);
+  }, []);
 
-  const [options] = useState([
-    { value: 'l', label: 'L' },
-    { value: 'm', label: 'M' },
-    { value: 'xl', label: 'XL' },
-    { value: 'xxl', label: 'XXL' },
-    { value: '', label: 'Clear' }
-  ]);
+ 
 
-  const addToCart = () => {
-   let data=cart.find(dt=>dt._id===current._id)
-   if(data){
-    let newInfo=cart.map(dt=>{
-      if(dt._id ===data._id){
-        return {...dt,quantity:dt.quantity +1}
-      }else{
-        return dt
-      }
-    })
-    localStorage.setItem('cart',JSON.stringify(newInfo))
-    setCart(newInfo)
-   }else{
-    let newInfo=[...cart,{...current,quantity:1}];
-    localStorage.setItem('cart',JSON.stringify(newInfo))
-    setCart(newInfo)
-   }
+  const handleSellButtonClick = () => {
+    setOpen(true);
   };
 
+  const handleModalClose = () => {
+    setOpen(false);
+  };
+
+  const handleSale = async () => {
+    // const apiUrlPush = `${process.env.REACT_APP_API_URL}/sales/registerSales/${discount}`;
+    // const dataPush = {
+    //   productId: productId,
+    //   quantitySold: quantity,
+    //   salePrice: salePrice,
+    // };
+    try {
+      if (salePrice && discount) {
+        // const response = await axios.post(apiUrlPush, dataPush);
+        // console.log(response.data);
+        setOpen(false);
+        const timeAndDath = new Date();
+        const newSale = {
+          productId: productId,
+          quantitySold: quantity,
+          salePrice: salePrice,
+          costPrice: productData.price,
+          date: timeAndDath,
+          discount: discount,
+          productName: productData.productName,
+          description: productData.description,
+          image: productData.image,
+          originalQuantity: stockData.stockQuantity,
+        };
+        // const newSalePush = {
+        //   saleId: response.data.data._id,
+        // };
+        // const updatedSalesPush = [...salesPush, newSalePush];
+        const updatedSales = [...sales, newSale];
+        setSales(updatedSales);
+        // setSalesPush(updatedSalesPush);
+        localStorage.setItem("cart", JSON.stringify(updatedSales));
+        // localStorage.setItem("salesPush", JSON.stringify(updatedSalesPush));
+
+        setNewSaleId("");
+
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Successfully sold product",
+          showConfirmButton: false,
+          timer: 2500,
+        });
+
+        // alert("Successfully sold product");
+        setTimeout(() => {
+          window.location.href = `/`;
+        }, 500);
+      } else {
+        alert("Please enter sale price and discount amount");
+      }
+    } catch (err) {
+      console.error("Error selling product:", err);
+    }
+
+  };
+
+  useEffect(() => {
+    const apiUrl = `http://localhost:5000/product/${productId}`;
+    axios
+      .get(apiUrl)
+      .then((response) => {
+        setProductData(response.data.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching product data:", error);
+      });
+  }, [productId]);
+
+  useEffect(() => {
+    if (productData) {
+      const apiUrl1 = `http://localhost:5000/stock/bypid/${productId}`;
+      axios
+        .get(apiUrl1)
+        .then((response) => {
+          setStockData(response.data.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching stock data:", error);
+        });
+    }
+  }, [productId, productData]);
+
+  const handleQuantityChange = (event) => {
+    const newQuantity = parseInt(event.target.value, 10);
+    setQuantity(newQuantity);
+  };
+
+  const incrementQuantity = () => {
+    if (quantity < stockData.stockQuantity) {
+      setQuantity(quantity + 1);
+    }
+  };
+  const decrementQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+  
+  
   return (
-    <>
-      <div className="lg:text-2xl lg:p-4 md:p-3 p-2   bg-gray-500 lg:w-72 md:w-48 w-48   rounded-3xl border border-gray-700 hover:shadow-2xl transition duration-300 ease-in-out transform hover:scale-105 ml-6">
-        <Link
-          to="/productList"
-          className="back-button flex items-center text-white "
-        >
-          &larr;<span className=" m-auto">Back to all products</span>
-        </Link>
-
-        
-      </div>
-      {current ? (
-  <div className="ID-container">
-    <div className="pt-4 items-center relative">
-    <div class="flex flex-col justify-center items-center max-w-sm mx-auto my-8 p-4 ">
-  <div style={{backgroundImage: `url(${current.image})`}} 
-       class="bg-gray-300 h-96 w-[60vh] rounded-lg shadow-md bg-cover bg-center object-container"></div>
-  <div class="w-56 md:w-72 bg-white -mt-10 shadow-lg rounded-lg overflow-hidden">
-    <div class="py-2 text-center font-bold uppercase tracking-wide text-gray-800">{current.category}</div>
-    <div class="py-2 text-center font-bold uppercase tracking-wide text-gray-800">{current.description}</div>
-    <div class="flex items-center justify-between py-2 px-3 bg-gray-400 ">
-      <p class="text-5ray-800 font-bold ">${current.price}</p>
-      <button onClick={addToCart} class=" bg-gray-800 text-xs text-white px-2 py-1 font-semibold rounded uppercase hover:bg-gray-700">Add to cart</button>
-    </div>
-  </div>
-</div>
-      
-      <div className='absolute top-0 left-1/2 transform -translate-x-1/2 pt-2'>
-  {options && (
-    <select className="van-type bg-white drop-shadow-2xl shadow-xl font-abc text-xl transform hover:scale-105 transition-all duration-300 text-black px-4 lg:py-2 rounded mb-2 md:mb-0">
-      <option value="">All</option>
-      {options.map((option, index) => (
-        <option key={index} value={option.value}>{option.label}</option>
-      ))}
-    </select>
-  )}
-</div>
-     
-    </div>
-
     <div>
-    
-    </div>
-  </div>
-) : (
-  <h1>Loading....</h1>
-)}
+      {productData && stockData ? (
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6}>
+            <>
+              <img 
+               className="h-[60vh]"
+                component="img"
+                alt={productData.productName}
+                src={productData.image}
+                style={{ objectFit: "fill" }}
+              />
+            </>
+          </Grid>
+          <br />
+          <br />
+          <Grid item xs={12} sm={6}>
+            <Card style={{ marginRight: "35px" }}>
+              <CardContent>
+                <Typography color="neutral" level="h1" noWrap variant="plain">
+                  {productData.productName}
+                </Typography>
 
-    </>
+                <div className="description-container">
+                  <p className="description-text">{productData.description}</p>
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                    Price: ${productData.price}
+                
+
+                  <Typography color="primary" level="h2" variant="plain" noWrap>
+                    Total Price: ${productData.price * quantity}
+                  </Typography>
+                </div>
+
+                <Typography variant="body1">
+                  Stock Quantity: {stockData.stockQuantity}
+                </Typography>
+                <br />
+                <TextField
+                  label="Quantity"
+                  type="number"
+                  value={quantity}
+                  onChange={handleQuantityChange}
+                  inputProps={{ min: 1, max: stockData.stockQuantity }}
+                />
+                <Paper
+                  elevation={0}
+                  style={{ display: "inline", margin: "0 10px" }}
+                >
+                  <IconButton
+                    onClick={incrementQuantity}
+                    disabled={quantity >= stockData.stockQuantity}
+                  >
+                    <AddCircleOutline />
+                  </IconButton>
+                  <IconButton
+                    onClick={decrementQuantity}
+                    disabled={quantity <= 1}
+                  >
+                    <RemoveCircleOutline />
+                  </IconButton>
+                </Paper>
+              </CardContent>
+              <div style={{ marginRight: "35px", marginLeft: "35px" }}>
+                {quantity > stockData.stockQuantity ? (
+                  <Button
+                    className="button-31"
+                    variant="contained"
+                    color="primary"
+                    disabled
+                    style={{
+                      backgroundColor: "#ccc",
+                      color: "#666",
+                      cursor: "not-allowed",
+                      opacity: "0.7",
+                      "&:hover": {
+                        backgroundColor: "#252",
+                        color: "white",
+                        opacity: "0.7",
+                      },
+                    }}
+                  >
+                    Insufficient Quantity
+                  </Button>
+                ) : (
+                  <Button
+                    className="button-31"
+                    variant="contained"
+                    color="primary"
+                    disabled={quantity > stockData.stockQuantity}
+                    onClick={handleSellButtonClick}
+                    style={{
+                      backgroundColor: "#222",
+                      color: "white",
+                    }}
+                    classes={{
+                      root: "button-root",
+                      disabled: "page-buttons",
+                    }}
+                  >
+                    Add to cart
+                  </Button>
+                )}
+              </div>
+              <br />
+              <br />
+            </Card>
+            <Modal open={open} onClose={handleModalClose}>
+              <ModalDialog
+                variant="outlined"
+                role="alertdialog"
+                aria-labelledby="alert-dialog-modal-title"
+                aria-describedby="alert-dialog-modal-description"
+              >
+                <Typography
+                  id="alert-dialog-modal-title"
+                  level="h2"
+                  startdecorator={<WarningRoundedIcon />}
+                >
+                  Sell Product: {productData.productName}
+                </Typography>
+                <Divider />
+
+                <div
+                  style={{
+                    display: "flex",
+                    marginTop: "5px",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography
+                    color="primary"
+                    level="h4"
+                    variant="plain"
+                    noWrap
+                    style={{ marginBottom: "10px" }}
+                  >
+  Buying Price: ${productData.price}
+                  </Typography>
+
+                  <Typography
+                    color="success"
+                    level="h4"
+                    variant="plain"
+                    noWrap
+                    style={{ marginBottom: "10px" }}
+                  >
+                    Quantity: {quantity}
+                  </Typography>
+                </div>
+
+                <Box p={1}>
+                  <TextField
+                    label="Sale Price"
+                    type="number"
+                    fullWidth
+                    value={salePrice}
+                    required
+                    onChange={(e) => setSalePrice(e.target.value)}
+                  />
+                  <TextField
+                    label="Discount"
+                    type="number"
+                    fullWidth
+                    required
+                    value={discount}
+                    onChange={(e) => setDiscount(e.target.value)}
+                    style={{ marginTop: "10px" }}
+                  />
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 1,
+                    justifyContent: "flex-end",
+                    pt: 2,
+                  }}
+                >
+                  <Typography>
+                    Total Price: ${(salePrice * quantity).toFixed(2)}
+                  </Typography>
+                </Box>
+                {/* <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end', pt: 2 }}>
+                  <Typography>
+                    Net Total: ${(salePrice * quantity - discount).toFixed(2)}
+                  </Typography>
+                </Box> */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 1,
+                    justifyContent: "flex-end",
+                    pt: 2,
+                  }}
+                >
+                  <Typography>
+                    Net Profit: ${(productData.price * quantity).toFixed(2)}
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 1,
+                    justifyContent: "flex-end",
+                    pt: 2,
+                  }}
+                >
+                  <Typography>
+                    Net Revenue: $
+                    {(
+                      salePrice * quantity -
+                      discount -
+                      productData.price * quantity
+                    ).toFixed(2)}
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 1,
+                    justifyContent: "flex-end",
+                    pt: 2,
+                  }}
+                >
+                  <Typography
+                    color="primary"
+                    level="h5"
+                    variant="plain"
+                    noWrap
+                    style={{ marginBottom: "10px" }}
+                  >
+                    Net Total: ${(salePrice * quantity - discount).toFixed(2)}
+                  </Typography>
+                </Box>
+
+                <Divider />
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 1,
+                    justifyContent: "flex-end",
+                    pt: 2,
+                  }}
+                >
+                  <Button
+                    variant="plain"
+                    color="neutral"
+                    onClick={handleModalClose}
+                  >
+                    Cancel
+                  </Button>
+                  <Button variant="solid" color="primary" onClick={handleSale}>
+                    Confirm Sale
+                  </Button>
+                </Box>
+              </ModalDialog>
+            </Modal>
+          </Grid>
+        </Grid>
+      ) : (
+        <Box sx={{ display: "flex" }}>
+          <CircularProgress />
+        </Box>
+      )}
+    </div>
   );
 };
 

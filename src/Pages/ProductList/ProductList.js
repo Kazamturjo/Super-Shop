@@ -1,3 +1,4 @@
+import { Card } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Fade } from 'react-awesome-reveal';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -153,7 +154,7 @@ const currentProducts = filterData(typeFilter).slice(indexOfFirstProduct, indexO
       <Fade cascadia duration={2000} damping={1.2} direction="left" >
 
         {currentProducts.map((product, index) => (
-          <div className="group my-2 flex flex-wrap w-full max-w-prose flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
+          <Card className="group my-2 flex flex-wrap w-full max-w-prose flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
               <Link to={`/product/${product._id}`} key={index} className="card-link">
                 
               <div
@@ -172,11 +173,14 @@ const currentProducts = filterData(typeFilter).slice(indexOfFirstProduct, indexO
               </div>
                   </Link>
               <div className="mt-4 px-5 pb-5">
-                <a href="#">
+                
                   <h5 className="text-xl tracking-tight text-slate-900 font-bold">
                     {product.productName}
                   </h5>
-                </a>
+                  <h5 className="text-xl tracking-tight text-slate-600 font-bold">
+                    {product.description}
+                  </h5>
+                
                 <div className="mt-2 mb-5 flex items-center justify-between">
                   <p>
                     <span className="text-3xl font-bold text-slate-900">
@@ -186,16 +190,16 @@ const currentProducts = filterData(typeFilter).slice(indexOfFirstProduct, indexO
                   </p>
                 </div>
 
-                <div
+                {/* <div
                   
                   className="flex justify-end"
                 >
                  
                   <button onClick={()=>addToCart(product)} className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 font-abc focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>Add to cart</button>
                   
-                </div>
+                </div> */}
               </div>
-            </div>
+            </Card>
         ))}
         </Fade>
       </div>
