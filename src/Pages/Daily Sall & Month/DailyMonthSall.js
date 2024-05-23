@@ -12,12 +12,7 @@ const DailyMonthSall = () => {
     const day = String(today.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   });
-    const [selectedMonth, setSelectedMonth] = useState(()=>{
-      const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    return `${year}-${month}`;
-    }); // Add selectedMonth state
+    const [selectedMonth, setSelectedMonth] = useState(''); 
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Add selectedYear state
   const [isLoading, setIsLoading] = useState(false);
   const [isFutureDate, setisFutureDate] = useState(false);
@@ -134,7 +129,7 @@ const DailyMonthSall = () => {
   };
 
   const handleMonthChange = (event) => {
-    setSelectedMonth(event.target.value);
+    setSelectedMonth(Number(event.target.value));
   };
 
   const handleYearChange = (event) => {
@@ -159,8 +154,25 @@ const DailyMonthSall = () => {
     }
   );
 
-  const netProfitLoss = total.totalProfit - total.totalLoss;
+  const netProfitLoss = total.totalProfit - total.totalLoss ;
   const netProfitLossColor = netProfitLoss >= 0 ? "text-green-500" : "text-red-500";
+
+  const monthsData = {
+    "months": [
+      { "name": "January", "number": 1 },
+      { "name": "February", "number": 2 },
+      { "name": "March", "number": 3 },
+      { "name": "April", "number": 4 },
+      { "name": "May", "number": 5 },
+      { "name": "June", "number": 6 },
+      { "name": "July", "number": 7 },
+      { "name": "August", "number": 8 },
+      { "name": "September", "number": 9 },
+      { "name": "October", "number": 10 },
+      { "name": "November", "number": 11 },
+      { "name": "December", "number": 12 }
+    ]
+  };
 
   return (
     <div className="container mx-auto p-6">
@@ -260,14 +272,16 @@ const DailyMonthSall = () => {
         <div>
           <h1 className="text-2xl font-bold mb-4">Monthly Sales Report</h1>
           <div className="flex space-x-4 mb-4">
-            <input
-            
-              type="month"
-              className="border rounded p-2 w-full"
-              value={selectedMonth}
-              placeholder="Month"
-              onChange={handleMonthChange}
-            />
+          <select
+        className="border rounded p-2 w-full"
+        value={selectedMonth}
+        onChange={handleMonthChange}
+      >
+        <option value="" disabled>Select a month</option>
+        {monthsData.months.map((month, index) => (
+          <option key={index} value={month.number}>{month.name}</option>
+        ))}
+      </select>
             <input
               type="number"
               className="border rounded p-2 w-full"
