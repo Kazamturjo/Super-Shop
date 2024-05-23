@@ -210,7 +210,7 @@ const Navbar = () => {
             </div>
           </Link>
             
-          <Link to="/selles">
+          {/* <Link to="/selles">
             <div className="flex mt-5">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={`w-9 h-9  bg-gray-300 text-4xl hover:scale-105 rounded text-black p-1 cursor-pointer duration-500 ${
                   open && 'rotate-[360deg] '
@@ -228,7 +228,7 @@ const Navbar = () => {
                 Sells
               </Link>
             </div>
-          </Link>
+          </Link> */}
 
           <Link to="/receipt">
             <div className="flex mt-5">
