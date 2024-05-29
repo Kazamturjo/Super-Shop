@@ -215,7 +215,7 @@ const DailyMonthSall = () => {
                     <div className="overflow-x-auto">
                       <table className="min-w-full bg-white">
                         <thead>
-                          <tr>
+                          <tr className="text-left">
                             <th className="px-6 py-2">Product Name</th>
                             <th className="px-6 py-2">Buying Price</th>
                             <th className="px-6 py-2">Sold Price</th>
@@ -294,7 +294,7 @@ const DailyMonthSall = () => {
             <div className="overflow-x-auto">
               <table className="min-w-full bg-white">
                 <thead>
-                  <tr>
+                  <tr className="text-left">
                     <th className="px-6 py-2">Date</th>
                     <th className="px-6 py-2">Buying Price</th>
                     <th className="px-6 py-2">Sold Price</th>
@@ -338,7 +338,7 @@ const DailyMonthSall = () => {
             <div className="overflow-x-auto">
               <table className="min-w-full bg-white">
                 <thead>
-                  <tr>
+                  <tr className="text-left"> 
                     <th className="px-6 py-2">Date</th>
                     <th className="px-6 py-2">Buying Price</th>
                     <th className="px-6 py-2">Sold Price</th>

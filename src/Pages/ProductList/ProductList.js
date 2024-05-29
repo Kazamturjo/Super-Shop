@@ -4,6 +4,7 @@ import { Fade } from 'react-awesome-reveal';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Swal } from 'sweetalert2';
 
+
 const ProductList = ({cart,setCart}) => {
 
   

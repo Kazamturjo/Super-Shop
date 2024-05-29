@@ -12,6 +12,7 @@ import { useState } from "react";
 import Table from "./Admin/Table";
 import Update from "./Admin/Update/Update";
 import Selles from "./Pages/Selling/Selles";
+import CheckOut from "./Pages/Checkout/CheckOut";
 
 function App() {
 const [cart,setCart]=useState([])
@@ -33,6 +34,7 @@ const [cart,setCart]=useState([])
         <Route path="/product/:productId" element={<ProductID cart={cart} setCart={setCart}/>} />
         <Route path="/table-list" element={<Table/>} />
         <Route path="/update/:id" element={<Update/>} />
+        <Route path="/cart/checkoutinfo/:id" element={<CheckOut/>}/>
 
         {/* <Route path="/cart" element={<Cart cart={cart} setCart={setCart}/>} /> */}
         

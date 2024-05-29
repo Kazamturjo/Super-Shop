@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { Fade } from 'react-awesome-reveal';
-import { CardContent, Divider, Grid, Paper, Typography } from '@mui/material';
+import axios from 'axios'
+import {  Divider, Grid, Paper, Typography } from '@mui/material';
 
 
 const Cart = ({ toggleCart }) => {
   const [sales, setSales] = useState([]);
-  const [salesPush, setSalesPush] = useState([]);
+  // const [salesPush, setSalesPush] = useState([]);
   const [salesIdNeedToPush, setsalesIdNeedToPush] = useState([]);
-  const [flagCheck, setFlagCheck] = useState([]);
+  // const [flagCheck, setFlagCheck] = useState([]);
 
   useEffect(() => {
     const storedSales = JSON.parse(localStorage.getItem("cart")) || [];
@@ -23,10 +22,10 @@ const Cart = ({ toggleCart }) => {
     0
   );
 
-  const totalQuantityOriginal = sales.reduce(
-    (total, sale) => total + sale.originalQuantity,
-    0
-  );
+  // const totalQuantityOriginal = sales.reduce(
+  //   (total, sale) => total + sale.originalQuantity,
+  //   0
+  // );
 
   const totalPrice = sales.reduce(
     (total, sale) => total + sale.salePrice * sale.quantitySold,
@@ -45,19 +44,19 @@ const Cart = ({ toggleCart }) => {
 
   const [open, setOpen] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
-  const [deleteInput, setDeleteInput] = useState("");
+  // const [deleteInput, setDeleteInput] = useState("");
 
-  const handleInputChange = (e) => {
-    setDeleteInput(e.target.value);
-  };
+  // const handleInputChange = (e) => {
+  //   setDeleteInput(e.target.value);
+  // };
 
-  const handleCloseModal = () => {
-    setDeleteInput("");
-    setOpen(false);
-    setOpen1(false);
-  };
+  // const handleCloseModal = () => {
+  //   setDeleteInput("");
+  //   setOpen(false);
+  //   setOpen1(false);
+  // };
 
-  const isDeleteInputValid = deleteInput.trim().toLowerCase() === "delete";
+  // const isDeleteInputValid = deleteInput.trim().toLowerCase() === "delete";
 
   // const handleDeleteProduct = async () => {
   //   try {
@@ -85,24 +84,24 @@ const Cart = ({ toggleCart }) => {
     setSales(updatedSales);
   };
 
-  const updateQuantity = (saleId, newQuantity) => {
-    const updatedSales = sales.map((sale) => {
-      if (sale.productId === saleId) {
-        return { ...sale, quantitySold: newQuantity };
-      }
-      return sale;
-    });
+  // const updateQuantity = (saleId, newQuantity) => {
+  //   const updatedSales = sales.map((sale) => {
+  //     if (sale.productId === saleId) {
+  //       return { ...sale, quantitySold: newQuantity };
+  //     }
+  //     return sale;
+  //   });
 
-    const allProductsValid = updatedSales.every(
-      (sale) => sale.originalQuantity >= sale.quantitySold
-    );
-    console.log(!allProductsValid);
+  //   const allProductsValid = updatedSales.every(
+  //     (sale) => sale.originalQuantity >= sale.quantitySold
+  //   );
+  //   console.log(!allProductsValid);
 
-    setSales(updatedSales);
-    setFlagCheck(allProductsValid);
+  //   setSales(updatedSales);
+  //   setFlagCheck(allProductsValid);
 
-    localStorage.setItem("cart", JSON.stringify(updatedSales));
-  };
+  //   localStorage.setItem("cart", JSON.stringify(updatedSales));
+  // };
 
   const handelConfirm = async () => {
     try {
@@ -124,7 +123,7 @@ const Cart = ({ toggleCart }) => {
           setsalesIdNeedToPush(salesIdPush);
         } catch (err) {
           console.error(err);
-          // alert("SOMETHING WRONG2");
+          alert("SOMETHING WRONG2");
         }
       });
 
@@ -138,11 +137,10 @@ const Cart = ({ toggleCart }) => {
             setOpen1(false);
             console.log(creatingReceipt.data.data);
             localStorage.setItem("cart", JSON.stringify([]));
-            // localStorage.setItem("salesPush", JSON.stringify([]));
             setSales([]);
            
 
-            // window.location.href = `/cart/checkoutinfo/${creatingReceipt.data.data.receiptNumber}`;
+            window.location.href = `/cart/checkoutinfo/${creatingReceipt.data.data.receiptNumber}`;
           } catch (error) {
             alert("SOMETHING WRONG1");
             console.log(error);
